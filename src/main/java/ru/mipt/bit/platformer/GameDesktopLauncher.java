@@ -28,20 +28,13 @@ public class GameDesktopLauncher implements ApplicationListener {
     public void create() {
         batch = new SpriteBatch();
         
-        // Загружаем карту
         map = new TmxMapLoader().load("level.tmx");
         mapRenderer = createSingleLayerMapRenderer(map, batch);
         
-        // Создаем модель игры
         gameModel = new GameModel();
-        
-        // Создаем контроллер ввода
         inputController = new InputController(gameModel);
-        
-        // Создаем рендерер
         gameRenderer = new GameRenderer(batch, mapRenderer);
         
-        // Загружаем текстуры
         loadTextures();
     }
     
@@ -49,27 +42,21 @@ public class GameDesktopLauncher implements ApplicationListener {
         Texture tankTexture = new Texture("images/tank_blue.png");
         Texture treeTexture = new Texture("images/greenTree.png");
         
-        gameModel.player.setTexture(new TextureRegion(tankTexture));
-        for (GameObject obstacle : gameModel.obstacles) {
+        gameModel.getPlayer().setTexture(new TextureRegion(tankTexture));
+        for (GameObject obstacle : gameModel.getObstacles()) {
             obstacle.setTexture(new TextureRegion(treeTexture));
         }
     }
 
     @Override
     public void render() {
-        // Очищаем экран
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
 
-        // Обновляем логику
         float delta = Gdx.graphics.getDeltaTime();
         inputController.update();
         gameModel.update(delta);
         
-        // Обновляем позиции для отрисовки
-        gameRenderer.updatePositions(gameModel);
-        
-        // Отрисовываем
         gameRenderer.render(gameModel);
     }
 
