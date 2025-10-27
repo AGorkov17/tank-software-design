@@ -8,7 +8,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameObject {
     protected TextureRegion graphics;
-    protected Rectangle rectangle;
+    protected Rectangle bounds;
     protected GridPoint2 coordinates;
     protected float rotation;
 
@@ -16,7 +16,15 @@ public class GameObject {
         this.graphics = graphics;
         this.coordinates = coordinates;
         this.rotation = rotation;
-        this.rectangle = createBoundingRectangle(graphics);
+        this.bounds = createBoundingRectangle(graphics);
+        updateBoundsPosition();
+    }
+
+    protected void updateBoundsPosition() {
+        if (bounds != null) {
+            bounds.x = coordinates.x * 128f;
+            bounds.y = coordinates.y * 128f;
+        }
     }
 
     public GridPoint2 getCoordinates() {
@@ -25,6 +33,7 @@ public class GameObject {
 
     public void setCoordinates(GridPoint2 coordinates) {
         this.coordinates = coordinates;
+        updateBoundsPosition();
     }
 
     public float getRotation() {
@@ -35,11 +44,35 @@ public class GameObject {
         this.rotation = rotation;
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public void render(Batch batch) {
-        drawTextureRegionUnscaled(batch, graphics, rectangle, rotation);
+        drawTextureRegionUnscaled(batch, graphics, bounds, rotation);
     }
+
+    public void update(float deltaTime) {
+        // Базовая реализация
+    }
+
+    public void setTexture(TextureRegion texture) {
+        this.graphics = texture;
+    }
+
+    public GameObject(GridPoint2 coordinates, float rotation) {
+    this.coordinates = coordinates;
+    this.rotation = rotation;
+    this.rectangle = new Rectangle();
+    }
+
+    
+    public void setTexture(TextureRegion texture) {
+    this.graphics = texture;
+    if (graphics != null) {
+        this.rectangle = createBoundingRectangle(graphics);
+    }
+    }
+
 }
+

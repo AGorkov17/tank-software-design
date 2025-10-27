@@ -27,14 +27,18 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        
+    
         map = new TmxMapLoader().load("level.tmx");
         mapRenderer = createSingleLayerMapRenderer(map, batch);
-        
+    
         gameModel = new GameModel();
+    
+    
+        gameModel.generateRandomLevel();
+    
         inputController = new InputController(gameModel);
         gameRenderer = new GameRenderer(batch, mapRenderer);
-        
+    
         loadTextures();
     }
     
