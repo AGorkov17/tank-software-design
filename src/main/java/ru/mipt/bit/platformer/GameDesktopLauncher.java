@@ -19,7 +19,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;
     private TiledMap map;
     private MapRenderer mapRenderer;
-    
+
     private GameModel gameModel;
     private InputController inputController;
     private GameRenderer gameRenderer;
@@ -27,25 +27,21 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void create() {
         batch = new SpriteBatch();
-    
+
         map = new TmxMapLoader().load("level.tmx");
         mapRenderer = createSingleLayerMapRenderer(map, batch);
-    
+
         gameModel = new GameModel();
-    
-    
-        gameModel.generateRandomLevel();
-    
         inputController = new InputController(gameModel);
         gameRenderer = new GameRenderer(batch, mapRenderer);
-    
+
         loadTextures();
     }
-    
+
     private void loadTextures() {
         Texture tankTexture = new Texture("images/tank_blue.png");
         Texture treeTexture = new Texture("images/greenTree.png");
-        
+
         gameModel.getPlayer().setTexture(new TextureRegion(tankTexture));
         for (GameObject obstacle : gameModel.getObstacles()) {
             obstacle.setTexture(new TextureRegion(treeTexture));
@@ -60,28 +56,38 @@ public class GameDesktopLauncher implements ApplicationListener {
         float delta = Gdx.graphics.getDeltaTime();
         inputController.update();
         gameModel.update(delta);
-        
+
         gameRenderer.render(gameModel);
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        // Обработка изменения размера окна
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+        // Пауза игры
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+        // Возобновление игры
+    }
 
     @Override
     public void dispose() {
         batch.dispose();
         map.dispose();
+        if (gameRenderer != null) {
+            gameRenderer.dispose();
+        }
     }
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setWindowedMode(1280, 1024);
+        config.setTitle("Tank Game");
         new Lwjgl3Application(new GameDesktopLauncher(), config);
     }
 }

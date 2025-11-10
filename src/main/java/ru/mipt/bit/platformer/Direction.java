@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.GridPoint2;
 
 public enum Direction {
     UP(0, 1, 90f, Keys.UP, Keys.W),
@@ -22,25 +23,11 @@ public enum Direction {
         this.key2 = key2;
     }
 
-    public int getDx() {
-        return dx;
-    }
-
-    public int getDy() {
-        return dy;
-    }
-
-    public float getRotation() {
-        return rotation;
-    }
-
-    public Keys getKey1() {
-        return key1;
-    }
-
-    public Keys getKey2() {
-        return key2;
-    }
+    public int getDx() { return dx; }
+    public int getDy() { return dy; }
+    public float getRotation() { return rotation; }
+    public Keys getKey1() { return key1; }
+    public Keys getKey2() { return key2; }
 
     public GridPoint2 getNextCoordinates(GridPoint2 current) {
         return new GridPoint2(current.x + dx, current.y + dy);
