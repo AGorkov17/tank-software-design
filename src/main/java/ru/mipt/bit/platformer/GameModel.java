@@ -1,40 +1,81 @@
 package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
-    public Tank player;
-    public List<GameObject> obstacles;
-    
+    private final Level level;
+    private final Tank playerTank;
+    private final List<TankAIController> aiControllers = new ArrayList<>();
+    private boolean showHealth = false;
+
     public GameModel() {
-        player = new Tank(new GridPoint2(1, 1));
-        obstacles = new ArrayList<>();
-        obstacles.add(new GameObject(new GridPoint2(1, 3), 0f));
+        this.level = LevelGenerator.generateLevel();
+        this.playerTank = new Tank(new GridPoint2(0, 0));
+
+        LevelGenerator.placeTanks(level, playerTank);
+        createAIControllers();
     }
-    
-    public boolean canMoveTo(GridPoint2 position) {
-        for (GameObject obstacle : obstacles) {
-            if (obstacle.coordinates.equals(position)) {
-                return false;
+
+    private void createAIControllers() {
+        for (Tank tank : level.getTanks()) {
+            if (tank != playerTank) {
+                aiControllers.add(new TankAIController(tank, this));
             }
         }
-        return true;
     }
-    
+
     public void movePlayer(Direction direction) {
-        if (player.canMove()) {
-            GridPoint2 newPosition = direction.getNextCoordinates(player.coordinates);
-            if (canMoveTo(newPosition)) {
-                player.move(direction);
+        moveTank(playerTank, direction);
+    }
+
+    public void moveTank(Tank tank, Direction direction) {
+        if (tank.canMove()) {
+            GridPoint2 newPos = direction.getNextCoordinates(tank.getCoordinates());
+            if (isMoveValid(newPos)) {
+                tank.move(direction);
             }
         }
     }
-    
+
+    private boolean isMoveValid(GridPoint2 position) {
+        return level.isValidPosition(position) && level.isPositionFree(position);
+    }
+
     public void update(float deltaTime) {
-        player.update(deltaTime);
+        // Обновляем AI
+        for (TankAIController ai : aiControllers) {
+            ai.execute();
+        }
+
+        // Обновляем все танки
+        for (Tank tank : level.getTanks()) {
+            tank.update(deltaTime);
+        }
+    }
+
+    public Tank getPlayer() {
+        return playerTank;
+    }
+
+    public List<Tank> getTanks() {
+        return level.getTanks();
+    }
+
+    public List<GameObject> getObstacles() {
+        List<GameObject> obstacles = new ArrayList<>();
+        for (GridPoint2 pos : level.getObstacles()) {
+            obstacles.add(new GameObject(pos, 0f));
+        }
+        return obstacles;
+    }
+
+    public boolean isShowHealth() {
+        return showHealth;
+    }
+
+    public void toggleHealthDisplay() {
+        showHealth = !showHealth;
     }
 }
