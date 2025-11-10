@@ -33,3 +33,4 @@ public enum Direction {
         return new GridPoint2(current.x + dx, current.y + dy);
     }
 }
+
