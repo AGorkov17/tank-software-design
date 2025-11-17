@@ -33,6 +33,24 @@ public class GameObject {
         this.coordinates = new GridPoint2(coordinates);
         this.rotation = rotation;
         this.graphics = graphics;
+import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+
+public class GameObject {
+    protected TextureRegion graphics;
+    protected Rectangle bounds;
+    protected GridPoint2 coordinates;
+    protected float rotation;
+
+    public GameObject(GridPoint2 coordinates, float rotation) {
+        this.coordinates = coordinates;
+        this.rotation = rotation;
+        this.bounds = new Rectangle();
+    }
+
+    public GameObject(TextureRegion graphics, GridPoint2 coordinates, float rotation) {
+        this.graphics = graphics;
+        this.coordinates = coordinates;
+        this.rotation = rotation;
         this.bounds = createBoundingRectangle(graphics);
         updateBounds();
     }
@@ -86,6 +104,29 @@ public class GameObject {
             return;
         }
         bounds.setPosition(coordinates.x * tileWidth, coordinates.y * tileHeight);
+    protected void updateBounds() {
+        if (bounds != null) {
+            bounds.x = coordinates.x * 128f;
+            bounds.y = coordinates.y * 128f;
+        }
+    }
+
+    public void setCoordinates(GridPoint2 coordinates) {
+        this.coordinates = coordinates;
+        updateBounds();
+    }
+
+    public GridPoint2 getCoordinates() { return coordinates; }
+    public float getRotation() { return rotation; }
+    public void setRotation(float rotation) { this.rotation = rotation; }
+    public Rectangle getBounds() { return bounds; }
+    public TextureRegion getGraphics() { return graphics; }
+
+    public void setTexture(TextureRegion texture) {
+        this.graphics = texture;
+        if (bounds == null) {
+            this.bounds = createBoundingRectangle(graphics);
+        }
     }
 
     public void render(Batch batch) {
@@ -96,5 +137,8 @@ public class GameObject {
 
     public void update(float deltaTime) {
         // default implementation does nothing
+    }
+}
+
     }
 }

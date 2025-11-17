@@ -21,6 +21,14 @@ public enum Direction {
     DOWN(0, -1, -90f, DOWN, S),
     LEFT(-1, 0, 180f, LEFT, A),
     RIGHT(1, 0, 0f, RIGHT, D);
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.GridPoint2;
+
+public enum Direction {
+    UP(0, 1, 90f, Keys.UP, Keys.W),
+    DOWN(0, -1, -90f, Keys.DOWN, Keys.S),
+    LEFT(-1, 0, -180f, Keys.LEFT, Keys.A),
+    RIGHT(1, 0, 0f, Keys.RIGHT, Keys.D);
 
     private final int dx;
     private final int dy;
@@ -65,3 +73,5 @@ public enum Direction {
         return directions[random.nextInt(directions.length)];
     }
 }
+}
+

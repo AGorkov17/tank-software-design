@@ -11,12 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRenderer;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
+import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 /**
  * Desktop launcher wires LibGDX lifecycle to our pure model/renderer abstractions.
@@ -26,6 +26,9 @@ public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;
     private TiledMap level;
     private MapRenderer levelRenderer;
+    private Batch batch;
+    private TiledMap map;
+    private MapRenderer mapRenderer;
 
     private GameModel gameModel;
     private InputController inputController;
@@ -66,18 +69,51 @@ public class GameDesktopLauncher implements ApplicationListener {
         gameModel.processCommands();
         gameModel.update(deltaTime);
         gameRenderer.render();
+        map = new TmxMapLoader().load("level.tmx");
+        mapRenderer = createSingleLayerMapRenderer(map, batch);
+
+        gameModel = new GameModel();
+        inputController = new InputController(gameModel);
+        gameRenderer = new GameRenderer(batch, mapRenderer);
+
+        loadTextures();
+    }
+
+    private void loadTextures() {
+        Texture tankTexture = new Texture("images/tank_blue.png");
+        Texture treeTexture = new Texture("images/greenTree.png");
+
+        gameModel.getPlayer().setTexture(new TextureRegion(tankTexture));
+        for (GameObject obstacle : gameModel.getObstacles()) {
+            obstacle.setTexture(new TextureRegion(treeTexture));
+        }
+    }
+
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
+        Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
+
+        float delta = Gdx.graphics.getDeltaTime();
+        inputController.update();
+        gameModel.update(delta);
+
+        gameRenderer.render(gameModel);
     }
 
     @Override
     public void resize(int width, int height) {
+        // Обработка изменения размера окна
     }
 
     @Override
     public void pause() {
+        // Пауза игры
     }
 
     @Override
     public void resume() {
+        // Возобновление игры
     }
 
     @Override
@@ -99,6 +135,10 @@ public class GameDesktopLauncher implements ApplicationListener {
         }
         if (batch != null) {
             batch.dispose();
+        batch.dispose();
+        map.dispose();
+        if (gameRenderer != null) {
+            gameRenderer.dispose();
         }
     }
 
@@ -135,4 +175,5 @@ public class GameDesktopLauncher implements ApplicationListener {
         pixmap.dispose();
         return texture;
     }
+}
 }
