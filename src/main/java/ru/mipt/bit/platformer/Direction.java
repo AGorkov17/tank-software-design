@@ -1,33 +1,17 @@
 package ru.mipt.bit.platformer;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.GridPoint2;
 
 import java.util.Random;
-
-import static com.badlogic.gdx.Input.Keys.A;
-import static com.badlogic.gdx.Input.Keys.D;
-import static com.badlogic.gdx.Input.Keys.DOWN;
-import static com.badlogic.gdx.Input.Keys.LEFT;
-import static com.badlogic.gdx.Input.Keys.RIGHT;
-import static com.badlogic.gdx.Input.Keys.S;
-import static com.badlogic.gdx.Input.Keys.UP;
-import static com.badlogic.gdx.Input.Keys.W;
 
 /**
  * Direction abstraction stores grid deltas, rendering rotation and keyboard bindings.
  */
 public enum Direction {
-    UP(0, 1, 90f, UP, W),
-    DOWN(0, -1, -90f, DOWN, S),
-    LEFT(-1, 0, 180f, LEFT, A),
-    RIGHT(1, 0, 0f, RIGHT, D);
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.GridPoint2;
-
-public enum Direction {
     UP(0, 1, 90f, Keys.UP, Keys.W),
     DOWN(0, -1, -90f, Keys.DOWN, Keys.S),
-    LEFT(-1, 0, -180f, Keys.LEFT, Keys.A),
+    LEFT(-1, 0, 180f, Keys.LEFT, Keys.A),
     RIGHT(1, 0, 0f, Keys.RIGHT, Keys.D);
 
     private final int dx;
