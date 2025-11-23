@@ -5,6 +5,7 @@ package ru.mipt.bit.platformer;
  */
 public class ToggleHealthDisplayCommand implements Command {
 
+public class ToggleHealthDisplayCommand {
     private final GameModel gameModel;
 
     public ToggleHealthDisplayCommand(GameModel gameModel) {
@@ -12,6 +13,10 @@ public class ToggleHealthDisplayCommand implements Command {
     }
 
     @Override
+    public void execute() {
+        gameModel.toggleHealthDisplay();
+    }
+}
     public void execute() {
         gameModel.toggleHealthDisplay();
     }

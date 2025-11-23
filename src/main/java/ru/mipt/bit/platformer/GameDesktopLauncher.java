@@ -37,18 +37,51 @@ public class GameDesktopLauncher implements ApplicationListener {
         gameModel.processCommands();
         gameModel.update(deltaTime);
         gameRenderer.render();
+        map = new TmxMapLoader().load("level.tmx");
+        mapRenderer = createSingleLayerMapRenderer(map, batch);
+
+        gameModel = new GameModel();
+        inputController = new InputController(gameModel);
+        gameRenderer = new GameRenderer(batch, mapRenderer);
+
+        loadTextures();
+    }
+
+    private void loadTextures() {
+        Texture tankTexture = new Texture("images/tank_blue.png");
+        Texture treeTexture = new Texture("images/greenTree.png");
+
+        gameModel.getPlayer().setTexture(new TextureRegion(tankTexture));
+        for (GameObject obstacle : gameModel.getObstacles()) {
+            obstacle.setTexture(new TextureRegion(treeTexture));
+        }
+    }
+
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
+        Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
+
+        float delta = Gdx.graphics.getDeltaTime();
+        inputController.update();
+        gameModel.update(delta);
+
+        gameRenderer.render(gameModel);
     }
 
     @Override
     public void resize(int width, int height) {
+        // Обработка изменения размера окна
     }
 
     @Override
     public void pause() {
+        // Пауза игры
     }
 
     @Override
     public void resume() {
+        // Возобновление игры
     }
 
     @Override
@@ -64,4 +97,5 @@ public class GameDesktopLauncher implements ApplicationListener {
         config.setTitle("Tank Game");
         new Lwjgl3Application(new GameDesktopLauncher(), config);
     }
+}
 }

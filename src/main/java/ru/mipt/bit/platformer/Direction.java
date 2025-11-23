@@ -57,3 +57,5 @@ public enum Direction {
         return directions[random.nextInt(directions.length)];
     }
 }
+}
+

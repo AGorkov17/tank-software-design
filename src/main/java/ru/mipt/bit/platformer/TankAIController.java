@@ -14,6 +14,10 @@ public class TankAIController {
     private final GameModel gameModel;
     private final Random random = new Random();
     private float decisionTimer;
+public class TankAIController implements Command {
+    private final Tank tank;
+    private final GameModel gameModel;
+    private final Random random = new Random();
 
     public TankAIController(Tank tank, GameModel gameModel) {
         this.tank = tank;
@@ -32,5 +36,18 @@ public class TankAIController {
             Direction direction = Direction.random(random);
             gameModel.enqueueCommand(new MoveCommand(gameModel, tank, direction));
         }
+    }
+}
+    @Override
+    public void execute() {
+        if (tank.canMove()) {
+            Direction randomDirection = getRandomDirection();
+            gameModel.moveTank(tank, randomDirection);
+        }
+    }
+
+    private Direction getRandomDirection() {
+        Direction[] directions = Direction.values();
+        return directions[random.nextInt(directions.length)];
     }
 }

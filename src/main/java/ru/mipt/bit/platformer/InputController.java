@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input.Keys;
  */
 public class InputController {
 
+public class InputController {
     private final GameModel gameModel;
     private final ToggleHealthDisplayCommand healthCommand;
 
@@ -19,6 +20,8 @@ public class InputController {
     public void collectCommands() {
         handlePlayerMovement();
         handleShooting();
+    public void update() {
+        handlePlayerMovement();
         handleHealthToggle();
     }
 
@@ -28,6 +31,9 @@ public class InputController {
             if (Gdx.input.isKeyPressed(direction.getPrimaryKey())
                     || Gdx.input.isKeyPressed(direction.getSecondaryKey())) {
                 gameModel.enqueueCommand(new MoveCommand(gameModel, player, direction));
+        for (Direction dir : Direction.values()) {
+            if (Gdx.input.isKeyPressed(dir.getKey1()) || Gdx.input.isKeyPressed(dir.getKey2())) {
+                gameModel.movePlayer(dir);
                 break;
             }
         }
@@ -42,6 +48,12 @@ public class InputController {
     private void handleHealthToggle() {
         if (Gdx.input.isKeyJustPressed(Keys.L)) {
             gameModel.enqueueCommand(healthCommand);
+        }
+    }
+}
+    private void handleHealthToggle() {
+        if (Gdx.input.isKeyJustPressed(Keys.L)) {
+            healthCommand.execute();
         }
     }
 }
